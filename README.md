@@ -46,7 +46,7 @@ npm update -g generator-jhipster-helloworld
 
 # License
 
-Apache-2.0 © [Pascal Grimaud]
+Apache-2.0 © [Pascal Grimaud](https://twitter.com/pascalgrimaud)
 
 
 [npm-image]: https://img.shields.io/npm/v/generator-jhipster-helloworld.svg
