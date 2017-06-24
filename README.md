@@ -54,4 +54,4 @@ Apache-2.0 © [Pascal Grimaud](https://twitter.com/pascalgrimaud)
 [travis-image]: https://travis-ci.org/pascalgrimaud/generator-jhipster-helloworld.svg?branch=master
 [travis-url]: https://travis-ci.org/pascalgrimaud/generator-jhipster-helloworld
 [daviddm-image]: https://david-dm.org/pascalgrimaud/generator-jhipster-helloworld.svg?theme=shields.io
-[daviddm-url]: https://david-dm.org/pascalgrimaud/generator-jhipster-module
+[daviddm-url]: https://david-dm.org/pascalgrimaud/generator-jhipster-helloworld
