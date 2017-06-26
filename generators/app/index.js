@@ -3,27 +3,20 @@ const chalk = require('chalk');
 const generator = require('yeoman-generator');
 const packagejs = require('../../package.json');
 const semver = require('semver');
-const shelljs = require('shelljs');
 const BaseGenerator = require('generator-jhipster/generators/generator-base');
-const constants = require('generator-jhipster/generators/generator-constants');
-// const jhipsterUtils = require('generator-jhipster/generators/util');
+const jhipsterConstants = require('generator-jhipster/generators/generator-constants');
 
 const JhipsterGenerator = generator.extend({});
 util.inherits(JhipsterGenerator, BaseGenerator);
 
 module.exports = JhipsterGenerator.extend({
-    _getConfig() {
-        const fromPath = '.yo-rc.json';
-        if (shelljs.test('-f', fromPath)) {
-            const fileData = this.fs.readJSON(fromPath);
-            if (fileData && fileData['generator-jhipster']) {
-                return fileData['generator-jhipster'];
-            }
-        }
-        return false;
-    },
-
     initializing: {
+        readConfig() {
+            this.jhipsterConfig = this.getJhipsterAppConfig();
+            if (!this.jhipsterConfig) {
+                this.error('Can\'t read .yo-rc.json');
+            }
+        },
         displayLogo() {
             // it's here to show that you can use functions from generator-jhipster
             // this function is in: generator-jhipster/generators/generator-base.js
@@ -33,7 +26,7 @@ module.exports = JhipsterGenerator.extend({
             this.log(`Welcome to the ${chalk.bold.yellow('JHipster helloworld')} generator! ${chalk.yellow(`v${packagejs.version}\n`)}`);
         },
         checkJhipster() {
-            const jhipsterVersion = this._getConfig().jhipsterVersion;
+            const jhipsterVersion = this.jhipsterConfig.jhipsterVersion;
             const minimumJhipsterVersion = packagejs.dependencies['generator-jhipster'];
             if (!semver.satisfies(jhipsterVersion, minimumJhipsterVersion)) {
                 this.warning(`\nYour generated project used an old JHipster version (${jhipsterVersion})... you need at least (${minimumJhipsterVersion})\n`);
@@ -61,9 +54,6 @@ module.exports = JhipsterGenerator.extend({
     },
 
     writing() {
-        // read config from .yo-rc.json
-        const config = this._getConfig();
-
         // function to use directly template
         this.template = function (source, destination) {
             this.fs.copyTpl(
@@ -74,20 +64,20 @@ module.exports = JhipsterGenerator.extend({
         };
 
         // read config from .yo-rc.json
-        this.baseName = config.baseName;
-        this.packageName = config.packageName;
-        this.packageFolder = config.packageFolder;
-        this.clientFramework = config.clientFramework;
-        this.clientPackageManager = config.clientPackageManager;
-        this.buildTool = config.buildTool;
+        this.baseName = this.jhipsterConfig.baseName;
+        this.packageName = this.jhipsterConfig.packageName;
+        this.packageFolder = this.jhipsterConfig.packageFolder;
+        this.clientFramework = this.jhipsterConfig.clientFramework;
+        this.clientPackageManager = this.jhipsterConfig.clientPackageManager;
+        this.buildTool = this.jhipsterConfig.buildTool;
 
         // use function in generator-base.js from generator-jhipster
         this.angularAppName = this.getAngularAppName();
 
         // use constants from generator-constants.js
-        const javaDir = `${constants.SERVER_MAIN_SRC_DIR + this.packageFolder}/`;
-        const resourceDir = constants.SERVER_MAIN_RES_DIR;
-        const webappDir = constants.CLIENT_MAIN_SRC_DIR;
+        const javaDir = `${jhipsterConstants.SERVER_MAIN_SRC_DIR + this.packageFolder}/`;
+        const resourceDir = jhipsterConstants.SERVER_MAIN_RES_DIR;
+        const webappDir = jhipsterConstants.CLIENT_MAIN_SRC_DIR;
 
         // variable from questions
         this.message = this.props.message;
