@@ -23,7 +23,7 @@ module.exports = JhipsterGenerator.extend({
             this.printJHipsterLogo();
 
             // Have Yeoman greet the user.
-            this.log(`Welcome to the ${chalk.bold.yellow('JHipster helloworld')} generator! ${chalk.yellow(`v${packagejs.version}\n`)}`);
+            this.log(`\nWelcome to the ${chalk.bold.yellow('JHipster helloworld')} generator! ${chalk.yellow(`v${packagejs.version}\n`)}`);
         },
         checkJhipster() {
             const jhipsterVersion = this.jhipsterAppConfig.jhipsterVersion;
@@ -35,7 +35,6 @@ module.exports = JhipsterGenerator.extend({
     },
 
     prompting() {
-        const done = this.async();
         const prompts = [
             {
                 type: 'input',
@@ -45,6 +44,7 @@ module.exports = JhipsterGenerator.extend({
             }
         ];
 
+        const done = this.async();
         this.prompt(prompts).then((props) => {
             this.props = props;
             // To access props later use this.props.someOption;
@@ -117,10 +117,6 @@ module.exports = JhipsterGenerator.extend({
     },
 
     install() {
-        if (this.config.testmode !== null) {
-            return;
-        }
-
         let logMsg =
             `To install your dependencies manually, run: ${chalk.yellow.bold(`${this.clientPackageManager} install`)}`;
 
@@ -142,7 +138,11 @@ module.exports = JhipsterGenerator.extend({
             yarn: this.clientPackageManager === 'yarn',
             callback: injectDependenciesAndConstants
         };
-        this.installDependencies(installConfig);
+        if (this.options['skip-install']) {
+            this.log(logMsg);
+        } else {
+            this.installDependencies(installConfig);
+        }
     },
 
     end() {
